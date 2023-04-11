@@ -20,8 +20,8 @@
 </template>
 
 <script lang="ts" setup>
-// @ts-ignore
 import { defineProps, defineEmits } from "vue";
+// @ts-ignore
 import { RecycleScroller } from "vue-virtual-scroller";
 import User from "~/components/user.vue";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
