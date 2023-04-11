@@ -13,7 +13,7 @@
 <script lang="ts" setup>
 import type { IUser } from "~/types";
 
-const props = defineProps<{user: IUser}>();
+const props = defineProps<{ user: IUser }>();
 const fullName = computed(
   () => `${props.user.name.first} ${props.user.name.last}`
 );

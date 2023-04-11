@@ -20,9 +20,11 @@ export default NuxtAuthHandler({
         try {
           return await database
             .collection("users")
-            .findOne({ email: { $regex: new RegExp(credentials?.username.trim(), "i") } });
+            .findOne({
+              email: { $regex: new RegExp(credentials?.username.trim(), "i") },
+            });
         } catch (error) {
-          return null
+          return null;
         }
       },
     }),
