@@ -9,6 +9,12 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.7",
     "nuxt": "^3.3.3"
+  },
+  "dependencies": {
+    "lodash.debounce": "^4.0.8",
+    "mongodb": "5.2",
+    "vue-virtual-scroller": "^2.0.0-beta.8"
   }
 }
