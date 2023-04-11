@@ -36,7 +36,7 @@ const onUpdate = (
   visibleStartIndex: number,
   visibleEndIndex: number
 ) => {
-  if (!props.isLoading && visibleEndIndex > props.users.length - 300) {
+  if (!props.isLoading && visibleEndIndex > props.users.length - 500) {
     emit("loadMore");
   }
 };
