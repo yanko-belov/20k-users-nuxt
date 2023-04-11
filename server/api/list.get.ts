@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     const data = await usersCollection
       .find(find)
       .skip(offset)
-      .limit(500)
+      .limit(1000)
       .toArray();
     await client.close();
     return { users: data, totalCount, uri: uri };
