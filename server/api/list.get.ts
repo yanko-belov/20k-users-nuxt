@@ -1,7 +1,6 @@
 import { MongoClient } from "mongodb";
 
 export default defineEventHandler(async (event) => {
-  const uri = useRuntimeConfig().mongodbUri;
   try {
     const queryParams = getQuery(event);
     const offset = parseInt((queryParams?.offset as string) || "0", 10);
@@ -20,8 +19,8 @@ export default defineEventHandler(async (event) => {
       .limit(1000)
       .toArray();
     await client.close();
-    return { users: data, totalCount, uri: uri };
+    return { users: data, totalCount };
   } catch (error) {
-    return { users: [], totalCount: 0, error, uri: uri };
+    return { users: [], totalCount: 0, error };
   }
 });
