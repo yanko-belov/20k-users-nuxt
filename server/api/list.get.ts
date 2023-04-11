@@ -1,7 +1,13 @@
-import { MongoClient } from "mongodb";
+import { getServerSession } from "#auth";
+import { database } from "~/server/db";
 
 export default defineEventHandler(async (event) => {
   try {
+    const session = await getServerSession(event);
+    if (!session) {
+      return { status: "unauthenticated!" };
+    }
+
     const queryParams = getQuery(event);
     const offset = parseInt((queryParams?.offset as string) || "0", 10);
     const filter = (queryParams?.filter as string) || "";
