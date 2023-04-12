@@ -1,4 +1,3 @@
-// file: ~/server/api/auth/[...].ts
 import { NuxtAuthHandler } from "#auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { database } from "~/server/db";
@@ -16,13 +15,11 @@ export default NuxtAuthHandler({
         },
         password: { label: "Password", type: "password", value: "password" },
       },
-      async authorize(credentials: any) {
+      async authorize(credentials: { username: string; password: string }) {
         try {
-          return await database
-            .collection("users")
-            .findOne({
-              email: { $regex: new RegExp(credentials?.username.trim(), "i") },
-            });
+          return await database.collection("users").findOne({
+            email: { $regex: new RegExp(credentials?.username.trim(), "i") },
+          });
         } catch (error) {
           return null;
         }

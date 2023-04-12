@@ -1,16 +1,16 @@
 <template>
   <button @click="signOut">Sign Out</button>
 
-  <input type="text" v-model.trim="filter" placeholder="Filter by country" />
+  <input v-model.trim="filter" type="text" placeholder="Filter by country" />
   <template v-if="users.length">
-    <UsersList :users="users" :is-loading="isLoading" @loadMore="loadMore" />
+    <UsersList :users="users" :is-loading="isLoading" @load-more="loadMore" />
     <div class="status">{{ users.length }} / {{ totalCount }}</div>
   </template>
-  <div class="status" v-else-if="filter && isLoading">Searching...</div>
-  <div class="status" v-else-if="filter && !isLoading">
+  <div v-else-if="filter && isLoading" class="status">Searching...</div>
+  <div v-else-if="filter && !isLoading" class="status">
     No users with country '{{ filter }}'
   </div>
-  <div class="status" v-else-if="!filter && isLoading">Loading...</div>
+  <div v-else-if="!filter && isLoading" class="status">Loading...</div>
 </template>
 
 <script lang="ts" setup>

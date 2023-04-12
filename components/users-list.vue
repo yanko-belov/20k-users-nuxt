@@ -7,23 +7,24 @@
     <div>Company</div>
   </div>
   <RecycleScroller
+    v-slot="{ item: user }"
     class="scroller"
     :emit-update="true"
     :items="users"
     :item-size="60"
     key-field="_id"
-    v-slot="{ item: user }"
     @update="onUpdate"
   >
-    <User :user="user" />
+    <UserRow :user="user" />
   </RecycleScroller>
 </template>
 
 <script lang="ts" setup>
 import { defineProps, defineEmits } from "vue";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { RecycleScroller } from "vue-virtual-scroller";
-import User from "~/components/user.vue";
+import UserRow from "~/components/user-row.vue";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 import type { IUser } from "~/types";
 
