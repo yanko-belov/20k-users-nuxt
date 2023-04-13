@@ -1,0 +1,26 @@
+<template>
+  <nav class="sticky top-0 z-50 w-full border-b border-gray-200 bg-white">
+    <div
+      class="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-6"
+    >
+      <router-link to="/" class="flex items-center">
+        <img src="/img/logo.svg" class="mr-3 h-8" alt="20k Users Filter" />
+        <span class="self-center whitespace-nowrap text-2xl font-semibold">
+          20k Users
+        </span>
+      </router-link>
+      <div class="flex">
+        <button
+          type="button"
+          class="rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300"
+          @click="signOut"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  </nav>
+</template>
+<script lang="ts" setup>
+const { signOut } = useAuth();
+</script>
