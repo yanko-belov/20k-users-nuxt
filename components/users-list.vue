@@ -1,60 +1,67 @@
 <template>
-  <div class="header">
-    <div>Picture</div>
-    <div>Name</div>
-    <div>Country</div>
-    <div>Age</div>
-    <div>Company</div>
+  <div
+    class="sticky top-[165px] z-50 mb-2 flex items-center space-x-4 rounded-sm bg-gray-100 py-4 text-xs font-semibold uppercase text-gray-700"
+  >
+    <div class="w-11 flex-shrink-0"></div>
+    <div class="min-w-0 flex-1">User</div>
+    <div class="min-w-0 flex-1">Contact</div>
+    <div class="min-w-0 flex-1">Address</div>
   </div>
   <RecycleScroller
     v-slot="{ item: user }"
-    class="scroller"
-    :emit-update="true"
     :items="users"
-    :item-size="60"
+    :item-size="itemSize"
+    list-tag="ul"
+    item-tag="li"
     key-field="_id"
-    @update="onUpdate"
+    page-mode
   >
-    <UserRow :user="user" />
+    <UserListItem :user="user" class="py-3" />
   </RecycleScroller>
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits } from "vue";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { RecycleScroller } from "vue-virtual-scroller";
-import UserRow from "~/components/user-row.vue";
-import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 import type { IUser } from "~/types";
+import debounce from "lodash.debounce";
 
 const props = defineProps<{ users: IUser[]; isLoading: boolean }>();
-const emit = defineEmits<{ (e: "loadMore"): void }>();
+const emit = defineEmits<{ (e: "load-more"): void }>();
 
-const onUpdate = (
-  startIndex: number,
-  endIndex: number,
-  visibleStartIndex: number,
-  visibleEndIndex: number
-) => {
-  if (!props.isLoading && visibleEndIndex > props.users.length - 500) {
-    emit("loadMore");
+const itemSize = 68; // 68px is the height of the UserListItem component
+
+const halfHeight = computed(() => props.users.length * (itemSize / 2));
+
+const loadMoreIfTheScreenIsHalfScrolled = () => {
+  if (window.scrollY > halfHeight.value) {
+    emit("load-more");
   }
 };
+
+const loadMoreIfTheScreenIsHalfScrolledDebounced = debounce(
+  loadMoreIfTheScreenIsHalfScrolled,
+  100,
+  { maxWait: 1000 }
+);
+
+onMounted(() => {
+  window.addEventListener("scroll", loadMoreIfTheScreenIsHalfScrolledDebounced);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener(
+    "scroll",
+    loadMoreIfTheScreenIsHalfScrolledDebounced
+  );
+});
 </script>
 
-<style scoped>
-.header {
-  height: 50px;
-  padding: 5px;
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-}
-.header > div {
-  width: 20%;
-}
-.scroller {
-  height: 600px;
+<style lang="scss">
+@import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
+
+.vue-recycle-scroller__item-wrapper {
+  @apply divide-y divide-gray-200;
 }
 </style>
