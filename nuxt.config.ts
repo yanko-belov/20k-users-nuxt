@@ -8,4 +8,7 @@ export default defineNuxtConfig({
     },
   },
   modules: ["@sidebase/nuxt-auth"],
+  auth: {
+    enableGlobalAppMiddleware: true,
+  },
 });
