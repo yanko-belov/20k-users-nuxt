@@ -1,16 +1,27 @@
 <template>
-  <button @click="signOut">Sign Out</button>
-
-  <input v-model.trim="filter" type="text" placeholder="Filter by country" />
-  <template v-if="users.length">
-    <UsersList :users="users" :is-loading="isLoading" @load-more="loadMore" />
-    <div class="status">{{ users.length }} / {{ totalCount }}</div>
-  </template>
-  <div v-else-if="filter && isLoading" class="status">Searching...</div>
-  <div v-else-if="filter && !isLoading" class="status">
-    No users with country '{{ filter }}'
+  <NavBar />
+  <div class="mx-auto max-w-screen-xl p-6">
+    <div class="rounded-lg bg-white px-8 pb-8">
+      <div class="sticky top-[80px] z-50 bg-white pb-4 pt-8">
+        <FilterInput v-model="filter" :is-loading="isLoading" />
+      </div>
+      <template v-if="users.length">
+        <UsersList
+          :users="users"
+          :is-loading="isLoading"
+          @load-more="loadMore"
+        />
+        <EndOfList v-if="!hasMore" />
+      </template>
+      <NoData
+        v-else-if="hasActiveFilter && !isLoading"
+        @clear-filter="clearFilter"
+      >
+        No users with country "<span class="text-blue-700">{{ filter }}</span
+        >"
+      </NoData>
+    </div>
   </div>
-  <div v-else-if="!filter && isLoading" class="status">Loading...</div>
 </template>
 
 <script lang="ts" setup>
@@ -18,26 +29,24 @@ import { ref, watch } from "vue";
 import debounce from "lodash.debounce";
 import type { IUser } from "~/types";
 
-definePageMeta({ middleware: "auth" });
+useHead({
+  bodyAttrs: {
+    class: "bg-gray-200",
+  },
+});
 
-const { signOut } = useAuth();
 const users = ref<IUser[]>([]);
 const offset = ref(0);
 const filter = ref("");
 const isLoading = ref(true);
 const totalCount = ref(-1);
 
-const hasMoreValues = computed(() => totalCount.value > users.value.length);
+const hasMore = computed(() => totalCount.value > users.value.length);
+const hasActiveFilter = computed(() => !!filter.value);
 
-const loadMore = async () => {
-  if (!hasMoreValues.value) {
-    return;
-  }
-  offset.value += 1000;
-  await fetchUsers();
-};
+const clearFilter = () => (filter.value = "");
 
-async function fetchUsers(clearOldData = false) {
+const fetchUsers = async (clearOldData = false) => {
   isLoading.value = true;
   try {
     const response = await $fetch<{ users: IUser[]; totalCount: number }>(
@@ -55,12 +64,19 @@ async function fetchUsers(clearOldData = false) {
   } finally {
     isLoading.value = false;
   }
-}
+};
+
+const loadMore = async () => {
+  if (!hasMore.value) {
+    return;
+  }
+  offset.value += 1000;
+  await fetchUsers();
+};
 
 watch(
   filter,
   debounce(() => {
-    users.value = [];
     offset.value = 0;
     fetchUsers(true);
   }, 500)
@@ -68,18 +84,3 @@ watch(
 
 fetchUsers();
 </script>
-
-<style scoped>
-input {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  box-sizing: border-box;
-}
-
-.status {
-  padding: 12px 20px;
-  text-align: center;
-  font-size: 1.2rem;
-}
-</style>
