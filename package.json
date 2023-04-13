@@ -1,5 +1,7 @@
 {
-  "name": "nuxt-app",
+  "name": "20k-users",
+  "description": "20k Users is a demo app.",
+  "author": "Yanko Belov",
   "private": true,
   "scripts": {
     "build": "nuxt build",
