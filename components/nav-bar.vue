@@ -9,18 +9,6 @@
           20k Users
         </span>
       </router-link>
-      <div class="flex">
-        <button
-          type="button"
-          class="rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300"
-          @click="signOut"
-        >
-          Logout
-        </button>
-      </div>
     </div>
   </nav>
 </template>
-<script lang="ts" setup>
-const { signOut } = useAuth();
-</script>

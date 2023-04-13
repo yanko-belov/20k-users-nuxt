@@ -7,8 +7,4 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  modules: ["@sidebase/nuxt-auth"],
-  auth: {
-    enableGlobalAppMiddleware: true,
-  },
 });
